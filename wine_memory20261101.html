@@ -1,0 +1,654 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ワインテイスティングメモ</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Meiryo", sans-serif;
+      background: #faf7f5;
+      color: #30282c;
+      margin: 0;
+      padding: 16px;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+    }
+
+    h1 {
+      color: #793e53;
+      font-size: 24px;
+    }
+
+    h2 {
+      font-size: 19px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e8dfe2;
+      border-radius: 14px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 18px;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #c9bec2;
+      border-radius: 8px;
+      font-size: 16px;
+      background: white;
+    }
+
+    textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: #777;
+      margin-top: 5px;
+      line-height: 1.6;
+    }
+
+    .small {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .radio-group label {
+      margin: 0;
+      font-weight: normal;
+    }
+
+    button {
+      background: #793e53;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 7px 5px 7px 0;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button.secondary {
+      background: #e9e2e5;
+      color: #49323b;
+    }
+
+    button.danger {
+      background: #a23c3c;
+    }
+
+    button:active {
+      opacity: 0.8;
+    }
+
+    .message {
+      color: #287448;
+      font-weight: bold;
+      margin-top: 12px;
+      min-height: 20px;
+    }
+
+    .saved-item {
+      border-bottom: 1px solid #eee;
+      padding: 12px 0;
+    }
+
+    .saved-item:last-child {
+      border-bottom: none;
+    }
+
+    .saved-item button {
+      padding: 7px 12px;
+      font-size: 13px;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+<div class="container">
+
+  <h1>🍷 ワインテイスティングメモ</h1>
+  <p class="small">
+    山梨ヌーボーまつり 2026年11月3日<br>
+    ワインの香りを中心に記録しましょう。
+  </p>
+
+  <div class="card">
+
+    <h2>テイスティング記録</h2>
+
+    <label for="wineSelect">ワイン名</label>
+    <select id="wineSelect"></select>
+
+    <div id="otherArea" class="hidden">
+      <label for="otherName">その他のワイン名</label>
+      <input type="text" id="otherName"
+             placeholder="ワイナリー名・ワイン名">
+      <p class="hint">
+        入力例：〇〇ワイナリー／甲州 2026
+      </p>
+    </div>
+
+    <label for="appearance">① 外観・色</label>
+    <textarea id="appearance"></textarea>
+    <p class="hint">
+      入力例：淡いレモンイエロー、透明感がある、
+      明るいルビー色など
+    </p>
+
+    <label for="aroma">② 香り（最重要！）</label>
+    <textarea id="aroma"></textarea>
+    <p class="hint">
+      入力例：香りの強さは中程度。
+      柑橘系、レモン、青リンゴ、白い花など
+    </p>
+
+    <label for="taste">③ 味わい</label>
+    <textarea id="taste"></textarea>
+    <p class="hint">
+      入力例：辛口、酸味が強め、
+      渋みは控えめ、軽い口当たりなど
+    </p>
+
+    <label for="finish">④ 余韻・印象</label>
+    <textarea id="finish"></textarea>
+    <p class="hint">
+      入力例：爽やかな酸味が残る、
+      果実味が続く、余韻は短めなど
+    </p>
+
+    <label for="notes">⑤ 備考・自由メモ</label>
+    <textarea id="notes"></textarea>
+    <p class="hint">
+      入力例：生産者から聞いた話、
+      価格、必要チケット枚数、購入候補など
+    </p>
+
+    <label>⑥ 評価（5段階）</label>
+    <div class="radio-group" id="ratingArea">
+      <label><input type="radio" name="rating" value="1"> 1</label>
+      <label><input type="radio" name="rating" value="2"> 2</label>
+      <label><input type="radio" name="rating" value="3"> 3</label>
+      <label><input type="radio" name="rating" value="4"> 4</label>
+      <label><input type="radio" name="rating" value="5"> 5</label>
+    </div>
+    <p class="hint">
+      1：好みではない ／ 3：普通 ／ 5：とても好き
+    </p>
+
+    <label>⑦ ボトル購入希望</label>
+    <div class="radio-group">
+      <label>
+        <input type="radio" name="buy" value="買いたい">
+        買いたい
+      </label>
+      <label>
+        <input type="radio" name="buy" value="保留">
+        保留
+      </label>
+      <label>
+        <input type="radio" name="buy" value="試飲だけ">
+        試飲だけ
+      </label>
+    </div>
+
+    <div style="margin-top: 20px;">
+      <button onclick="saveMemo()">このワインを保存</button>
+      <button class="secondary" onclick="clearForm()">
+        入力をクリア
+      </button>
+    </div>
+
+    <p id="message" class="message"></p>
+
+  </div>
+
+  <div class="card">
+    <h2>保存済みメモ</h2>
+    <div id="savedList"></div>
+  </div>
+
+  <div class="card">
+    <h2>バックアップ</h2>
+
+    <button onclick="exportJSON()">
+      JSONバックアップ
+    </button>
+
+    <button class="secondary" onclick="exportText()">
+      テキスト出力
+    </button>
+
+    <label for="importFile">バックアップを復元</label>
+    <input type="file" id="importFile" accept=".json">
+
+    <p class="small">
+      記録はブラウザ内に保存されます。
+      ブラウザデータの削除や端末変更に備えて、
+      定期的にJSONバックアップを保存してください。
+    </p>
+  </div>
+
+</div>
+
+<script>
+  // ========================================
+  // 1. ワイン一覧
+  // ========================================
+
+  const wines = [
+    "シャトー・メルシャン｜甲州",
+    "サントリー登美の丘｜甲州",
+    "勝沼醸造｜ジャパンヌーヴォー白",
+    "御勅使川ワイナリー｜シャルドネ",
+    "Nikkawaワイナリー｜デラウェア",
+    "マンズワイン｜マスカット・ベーリーA",
+    "丸藤葡萄酒工業｜マスカット・ベーリーA",
+    "くらむぼんワイン｜ナイアガラ"
+  ];
+
+  const STORAGE_KEY = "wineTastingMemo2026";
+
+  let records = {};
+  let currentId = "wine-0";
+
+  const $ = id => document.getElementById(id);
+
+  // ========================================
+  // 2. 保存済みデータの読み込み
+  // ========================================
+
+  try {
+    records = JSON.parse(
+      localStorage.getItem(STORAGE_KEY) || "{}"
+    );
+  } catch (error) {
+    records = {};
+  }
+
+  // ========================================
+  // 3. ワイン選択欄
+  // ========================================
+
+  function buildSelect() {
+    const select = $("wineSelect");
+    select.innerHTML = "";
+
+    wines.forEach((wine, index) => {
+      select.add(
+        new Option(
+          (index + 1) + ". " + wine,
+          "wine-" + index
+        )
+      );
+    });
+
+    // 保存済みの「その他」を表示
+    Object.keys(records)
+      .filter(id => id.startsWith("other-"))
+      .forEach(id => {
+        const name = records[id].otherName || "名称未設定";
+        select.add(new Option("その他｜" + name, id));
+      });
+
+    select.add(new Option("＋ その他のワインを追加", "new-other"));
+  }
+
+  buildSelect();
+
+  // ========================================
+  // 4. 入力欄の操作
+  // ========================================
+
+  const fields = [
+    "appearance",
+    "aroma",
+    "taste",
+    "finish",
+    "notes"
+  ];
+
+  function getRadio(name) {
+    const checked = document.querySelector(
+      'input[name="' + name + '"]:checked'
+    );
+
+    return checked ? checked.value : "";
+  }
+
+  function setRadio(name, value) {
+    document.querySelectorAll(
+      'input[name="' + name + '"]'
+    ).forEach(radio => {
+      radio.checked = radio.value === value;
+    });
+  }
+
+  function clearForm() {
+    fields.forEach(field => {
+      $(field).value = "";
+    });
+
+    $("otherName").value = "";
+    setRadio("rating", "");
+    setRadio("buy", "");
+
+    $("message").textContent =
+      "入力欄をクリアしました。保存済みメモは残っています。";
+  }
+
+  function loadMemo() {
+    const selected = $("wineSelect").value;
+    currentId = selected;
+
+    const isOther =
+      selected === "new-other" ||
+      selected.startsWith("other-");
+
+    $("otherArea").classList.toggle("hidden", !isOther);
+
+    const data = records[selected] || {};
+
+    fields.forEach(field => {
+      $(field).value = data[field] || "";
+    });
+
+    $("otherName").value = data.otherName || "";
+
+    setRadio("rating", data.rating || "");
+    setRadio("buy", data.buy || "");
+
+    $("message").textContent =
+      records[selected]
+        ? "保存済みのメモを表示しています。"
+        : "";
+  }
+
+  $("wineSelect").addEventListener("change", loadMemo);
+
+  // ========================================
+  // 5. 保存処理
+  // ========================================
+
+  function saveMemo() {
+    let id = currentId;
+
+    const isOther =
+      id === "new-other" ||
+      id.startsWith("other-");
+
+    const otherName = $("otherName").value.trim();
+
+    if (isOther && !otherName) {
+      alert("その他のワイン名を入力してください。");
+      return;
+    }
+
+    // 新規の「その他」には固有IDを発行
+    if (id === "new-other") {
+      id = "other-" + Date.now() + "-" +
+        Math.random().toString(36).slice(2, 8);
+    }
+
+    const data = {
+      otherName: isOther ? otherName : "",
+      rating: getRadio("rating"),
+      buy: getRadio("buy")
+    };
+
+    fields.forEach(field => {
+      data[field] = $(field).value;
+    });
+
+    records[id] = data;
+
+    if (!persist()) {
+      return;
+    }
+
+    buildSelect();
+    $("wineSelect").value = id;
+    currentId = id;
+
+    $("message").textContent = "保存しました！ ✓";
+
+    renderSavedList();
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(records)
+      );
+      return true;
+    } catch (error) {
+      alert(
+        "保存できませんでした。ブラウザの設定や容量を確認してください。"
+      );
+      return false;
+    }
+  }
+
+  // ========================================
+  // 6. 保存済みメモ一覧
+  // ========================================
+
+  function getWineName(id) {
+    if (id.startsWith("wine-")) {
+      const index = Number(id.replace("wine-", ""));
+      return wines[index] || "不明なワイン";
+    }
+
+    return records[id]?.otherName || "その他";
+  }
+
+  function renderSavedList() {
+    const list = $("savedList");
+    list.innerHTML = "";
+
+    const ids = Object.keys(records);
+
+    if (ids.length === 0) {
+      list.textContent = "まだメモはありません。";
+      return;
+    }
+
+    ids.forEach(id => {
+      const data = records[id];
+
+      const item = document.createElement("div");
+      item.className = "saved-item";
+
+      const title = document.createElement("strong");
+      title.textContent = getWineName(id);
+
+      const info = document.createElement("p");
+      info.className = "small";
+      info.textContent =
+        "評価：" + (data.rating || "未評価") + "/5" +
+        " ／ 購入：" + (data.buy || "未設定");
+
+      const editButton = document.createElement("button");
+      editButton.textContent = "表示・編集";
+      editButton.onclick = () => {
+        $("wineSelect").value = id;
+        loadMemo();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+
+      const deleteButton = document.createElement("button");
+      deleteButton.textContent = "削除";
+      deleteButton.className = "danger";
+
+      deleteButton.onclick = () => {
+        if (!confirm("このメモを削除しますか？")) {
+          return;
+        }
+
+        delete records[id];
+
+        if (persist()) {
+          buildSelect();
+          $("wineSelect").value = "wine-0";
+          loadMemo();
+          renderSavedList();
+        }
+      };
+
+      item.appendChild(title);
+      item.appendChild(info);
+      item.appendChild(editButton);
+      item.appendChild(deleteButton);
+
+      list.appendChild(item);
+    });
+  }
+
+  // ========================================
+  // 7. ファイル出力
+  // ========================================
+
+  function downloadFile(content, type, filename) {
+    const blob = new Blob([content], { type: type });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function exportJSON() {
+    const content = JSON.stringify({
+      format: "wine-tasting-2026",
+      records: records
+    }, null, 2);
+
+    downloadFile(
+      content,
+      "application/json",
+      "wine_tasting_backup.json"
+    );
+  }
+
+  function exportText() {
+    const content = Object.keys(records).map(id => {
+      const data = records[id];
+
+      return [
+        "【" + getWineName(id) + "】",
+        "外観：" + (data.appearance || ""),
+        "香り：" + (data.aroma || ""),
+        "味わい：" + (data.taste || ""),
+        "余韻：" + (data.finish || ""),
+        "備考：" + (data.notes || ""),
+        "評価：" + (data.rating || "") + "/5",
+        "購入：" + (data.buy || "")
+      ].join("\n");
+    }).join("\n\n----------------\n\n");
+
+    downloadFile(
+      content,
+      "text/plain;charset=utf-8",
+      "wine_tasting_notes.txt"
+    );
+  }
+
+  // ========================================
+  // 8. JSONバックアップ復元
+  // ========================================
+
+  $("importFile").addEventListener("change", async event => {
+    const file = event.target.files[0];
+
+    if (!file) return;
+
+    try {
+      const text = await file.text();
+      const backup = JSON.parse(text);
+
+      if (
+        backup.format !== "wine-tasting-2026" ||
+        !backup.records ||
+        typeof backup.records !== "object" ||
+        Array.isArray(backup.records)
+      ) {
+        throw new Error("形式が異なります");
+      }
+
+      if (!confirm(
+        "現在の保存データをバックアップで置き換えますか？"
+      )) {
+        return;
+      }
+
+      records = backup.records;
+
+      if (persist()) {
+        buildSelect();
+        $("wineSelect").value = "wine-0";
+        loadMemo();
+        renderSavedList();
+
+        alert("バックアップを復元しました。");
+      }
+
+    } catch (error) {
+      alert("JSONファイルを読み込めませんでした。");
+    } finally {
+      event.target.value = "";
+    }
+  });
+
+  // ========================================
+  // 9. 初期表示
+  // ========================================
+
+  loadMemo();
+  renderSavedList();
+
+</script>
+</body>
+</html>
